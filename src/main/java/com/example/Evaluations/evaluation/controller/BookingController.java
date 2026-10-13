@@ -24,7 +24,7 @@ public class BookingController {
     }
 
 
-    @GetMapping("/booking/date/{date}")
+    @GetMapping("/booking/guest/{guest}/date/{date}")
     public Booking getBookingByGuestNameAndDate(@PathVariable("date") String guestName, String date) {
         Booking booking = new Booking();
         booking.setGuestName(guestName);
