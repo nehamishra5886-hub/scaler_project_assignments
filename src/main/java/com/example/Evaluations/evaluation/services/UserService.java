@@ -1,10 +1,14 @@
 package com.example.Evaluations.evaluation.services;
 
+import com.example.Evaluations.evaluation.dtos.LoginRequestDto;
 import com.example.Evaluations.evaluation.dtos.UserDto;
+import com.example.Evaluations.evaluation.exceptions.PasswordMismatchException;
 import com.example.Evaluations.evaluation.exceptions.UserAlreadyExistException;
+import com.example.Evaluations.evaluation.exceptions.UserNotFoundException;
 import com.example.Evaluations.evaluation.model.User;
 import com.example.Evaluations.evaluation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,5 +50,39 @@ public class UserService implements IUserService {
         return userRepository.save(user);
         //return null; // remove this
 
+    }
+
+    @Override
+    public String login(LoginRequestDto loginRequestDto) throws UserNotFoundException, PasswordMismatchException {
+        // TODO:
+        // If user is not found, throw UserNotFoundException with message:
+        // "There is no account with an email address: {emailvalue}"
+        //
+        String email = loginRequestDto.getEmail();
+
+        if (!userRepository.existsByEmail(email)) {
+            throw new UserNotFoundException(
+                    "There is no account with an email address: " + email
+            );
+        }
+
+        // If user has passed wrong password, throw PasswordMismatchException with message:
+        // "Please type correct password, or reset it"
+        // Check password using BCryptPasswordEncoder.matches()
+        //
+        User user = userRepository.findByEmail(email);
+
+        if (!passwordEncoder.matches(
+                loginRequestDto.getPassword(),
+                user.getPassword())) {
+            throw new PasswordMismatchException(
+                    "Please type correct password, or reset it"
+            );
+        }
+        // Otherwise generate a random alphanumeric token of length 15 using RandomStringUtils
+
+        return RandomStringUtils.randomAlphanumeric(15);
+
+        //return null;
     }
 }

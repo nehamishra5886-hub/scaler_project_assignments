@@ -23,4 +23,7 @@ public class UserRepository {
     public boolean existsByEmail(String email) {
         return userMap.containsKey(email);
     }
+    public User findByEmail(String email) {
+        return userMap.get(email);
+    }
 }
