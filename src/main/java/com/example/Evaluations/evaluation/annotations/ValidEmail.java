@@ -1,5 +1,6 @@
 package com.example.Evaluations.evaluation.annotations;
 
+import com.example.Evaluations.evaluation.util.EmailValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
